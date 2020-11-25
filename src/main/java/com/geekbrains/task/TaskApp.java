@@ -53,6 +53,7 @@ public class TaskApp {
             em.persist(client3);
             em.persist(client4);
 
+
             transaction.commit();
 
             Client client = em.find(Client.class, client1.getId());
@@ -71,26 +72,12 @@ public class TaskApp {
             em.createQuery("DELETE FROM Product p WHERE p.title = 'product1'").executeUpdate();
             em.getTransaction().commit();
 
-            Client client_1 = em.find(Client.class, client1.getId());
-            System.out.println(client_1);
-            for(Product product : client_1.getProducts()){
-                System.out.println(product.getTitle());
-            }
-
-            System.out.println("----------------------------------------");
+           showClient(client1, em);
 
 
-            Product product_5 = em.find(Product.class, product1.getId());
-            System.out.println(product_5);
-            for(Client client5 : product_5.getClients()){
-                System.out.println(client5.getName());
-            }
+            showProduct(product1, em);
 
             showAll(em);
-//            List<Product> products = em.createQuery("FROM Product", Product.class).getResultList();
-//            List<Client> clients = em.createQuery("FROM Client", Client.class).getResultList();
-//            System.out.println("FROM Product  " + products);
-//            System.out.println("FROM Client  " + clients);
 
             em.getTransaction().begin();;
             em.createQuery("DELETE FROM Client c WHERE c.name = 'client1'").executeUpdate();
@@ -103,12 +90,6 @@ public class TaskApp {
             System.out.println("FROM Product  " + products1);
             System.out.println("FROM Client  " + clients1);
 
-
-
-
-
-
-
         }finally {
             factory.close();
             if (em != null) {
@@ -120,8 +101,8 @@ public class TaskApp {
 
     private static void clear(EntityManager em) {
         em.getTransaction().begin();
-        em.createQuery("DELETE FROM Product").executeUpdate();
         em.createQuery("DELETE FROM Client").executeUpdate();
+        em.createQuery("DELETE FROM Product").executeUpdate();
         em.getTransaction().commit();
     }
 
@@ -132,4 +113,28 @@ public class TaskApp {
         System.out.println("FROM Product  " + products);
         System.out.println("FROM Client  " + clients);
     }
+
+    private static void showProduct(Product product, EntityManager em) {
+
+        Product tempProduct = em.find(Product.class, product.getId());
+        System.out.println("-----------------------------");
+        System.out.println(tempProduct);
+        for (Client o : tempProduct.getClients()) {
+            System.out.println(o);
+        }
+        System.out.println("-----------------------------");
+    }
+
+    private static void showClient(Client client, EntityManager em){
+
+        Client tempClient = em.find(Client.class, client.getId());
+        System.out.println("-----------------------------");
+        System.out.println(tempClient);
+        for(Product o : tempClient.getProducts()){
+            System.out.println(o);
+        }
+        System.out.println("-----------------------------");
+    }
+
+
 }

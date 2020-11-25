@@ -1,14 +1,12 @@
 package com.geekbrains.entity;
 
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
-@Table(name = "products")
-public class Product {
+@Table(name = "things")
+public class Thing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,23 +16,16 @@ public class Product {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "price")
-    private Double price;
-
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "products_clients",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "client_id")
+            name = "things_persons",
+            joinColumns = @JoinColumn(name = "thing_id"),
+            inverseJoinColumns = @JoinColumn(name = "person_id")
     )
-    private List<Client> clients = new ArrayList<>();
+    private List<Person> persons = new ArrayList<>();
 
-    public Product() {
-    }
-
-    public Product(String title, Double price) {
+    public Thing(String title) {
         this.title = title;
-        this.price = price;
     }
 
     public Long getId() {
@@ -53,29 +44,23 @@ public class Product {
         this.title = title;
     }
 
-    public Double getPrice() {
-        return price;
+    public List<Person> getPersons() {
+        return persons;
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
+    public void setPersons(List<Person> persons) {
+        this.persons = persons;
     }
 
-    public List<Client> getClients() {
-        return clients;
-    }
-
-    public void setClients(Client client) {
-        clients.add(client);
+    public void setPerson(Person person){
+        persons.add(person);
     }
 
     @Override
     public String toString() {
-        return "Product{" +
+        return "Thing{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", price=" + price +
                 '}';
     }
-
 }

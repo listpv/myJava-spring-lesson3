@@ -1,14 +1,13 @@
 package com.geekbrains.entity;
 
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "products")
-public class Product {
+@Table(name = "goods")
+public class Good {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,20 +20,15 @@ public class Product {
     @Column(name = "price")
     private Double price;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "products_clients",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "client_id")
-    )
-    private List<Client> clients = new ArrayList<>();
+    @OneToMany(mappedBy = "good")
+    List<GoodData> goodData = new ArrayList<>();
 
-    public Product() {
-    }
-
-    public Product(String title, Double price) {
+    public Good(String title, Double price) {
         this.title = title;
         this.price = price;
+    }
+
+    public Good() {
     }
 
     public Long getId() {
@@ -61,21 +55,35 @@ public class Product {
         this.price = price;
     }
 
-    public List<Client> getClients() {
-        return clients;
+    public List<GoodData> getGoodData() {
+        return goodData;
     }
 
-    public void setClients(Client client) {
-        clients.add(client);
+    public void setGoodData(List<GoodData> goodData) {
+        this.goodData = goodData;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Good good = (Good) o;
+        return id.equals(good.id) &&
+                Objects.equals(title, good.title) &&
+                Objects.equals(price, good.price);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, price);
     }
 
     @Override
     public String toString() {
-        return "Product{" +
+        return "Good{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", price=" + price +
                 '}';
     }
-
 }
