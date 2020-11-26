@@ -73,11 +73,31 @@ public class DataApp {
             good.setPrice(150.0);
             transaction.commit();
 
-            List<GoodData> goodData10 = em.createQuery("From GoodData", GoodData.class).getResultList();
-            for (GoodData o : goodData10){
+            System.out.println("---------------------------------------");
+
+            // поиск в общем списке пркупок по товару.
+            List<GoodData> goodData = em.createQuery("From GoodData", GoodData.class).getResultList();
+            for (GoodData o : goodData){
                 if(o.getGood().equals(good)){
                     System.out.println(o);
                 }
+            }
+
+            System.out.println("---------------------------------------");
+
+            //  список покупок у конкреиного userа.
+            User user = em.find(User.class, user4.getId());
+            List<GoodData> goodDataList = user.getGoodData();
+            for(GoodData o : goodDataList){
+                System.out.println(o);
+            }
+
+            System.out.println("---------------------------------------");
+
+            //  кто купил определённый товар.
+            List<GoodData> goodDataList1 = good.getGoodData();
+            for(GoodData o : goodDataList1){
+                System.out.println(o);
             }
 
 
